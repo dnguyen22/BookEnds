@@ -38,28 +38,28 @@ public class Book {
     /**
      * Return the title of the book.
      */
-    public String getmTitle() {
+    public String getTitle() {
         return mTitle;
     }
 
     /**
      * Return the string holding the author(s) of the book.
      */
-    public String getmAuthor() {
+    public String getAuthor() {
         return mAuthor;
     }
 
     /**
      * Return the list price of the book.
      */
-    public Double getmPrice() {
+    public Double getPrice() {
         return mPrice;
     }
 
     /**
      * Return the Google Book URL to find more details about the book.
      */
-    public String getmUrl() {
+    public String getUrl() {
         return mUrl;
     }
 }
