@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">BookEnds</string>
+
+    <string name="search_hint">Book title</string>
+
+    <string name="search_button">Search</string>
 </resources>
