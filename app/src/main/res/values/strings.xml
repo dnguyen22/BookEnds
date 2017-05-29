@@ -4,4 +4,6 @@
     <string name="search_hint">Book title</string>
 
     <string name="search_button">Search</string>
+
+    <string name="image_description">Book cover</string>
 </resources>
