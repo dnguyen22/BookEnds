@@ -12,10 +12,11 @@ import android.app.LoaderManager;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ListViewCompat;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,8 +26,16 @@ import java.util.List;
 
 public class BookEndActivity extends AppCompatActivity implements LoaderCallbacks<List<Book>> {
     /** URL for book data from the Google Books API */
-    private static final String BOOK_REQUEST_URL =
-            "https://www.googleapis.com/books/v1/volumes?q=android&maxResults=10";
+    private static final String BOOK_REQUEST_URL_START =
+            "https://www.googleapis.com/books/v1/volumes?q=";
+
+    /** URL for book data from the Google Books API setting max results to 10*/
+    private static final String BOOK_REQUEST_URL_LIMIT =
+            "&maxResults=10";
+
+    /** URL for book data from the Google Books API setting*/
+    private String mBookRequestURL =
+            "";
 
     /** Adapter for the list of books */
     private BookAdapter mAdapter;
@@ -42,6 +51,9 @@ public class BookEndActivity extends AppCompatActivity implements LoaderCallback
 
     /** ProgressBar that is displayed when loading data from HTTP request */
     private ProgressBar mProgressBar;
+
+    // Get a reference to the LoadManager, in order to interact with loaders.
+    LoaderManager mLoaderManager = getLoaderManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +105,29 @@ public class BookEndActivity extends AppCompatActivity implements LoaderCallback
             }
         });
 
-        // Get a reference to the LoadManager, in order to interact with loaders.
-        LoaderManager loaderManager = getLoaderManager();
+        // Set up search button
+        Button searchButton = (Button) findViewById(R.id.search_button);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+
+            /**
+             * Called when a view has been clicked.
+             *
+             * @param v The view that was clicked.
+             */
+            @Override
+            public void onClick(View v) {
+                // Get search string
+                EditText searchText = (EditText) findViewById(R.id.search_text);
+                // Updates search url
+                mBookRequestURL = BOOK_REQUEST_URL_START + searchText.getText().toString() + BOOK_REQUEST_URL_LIMIT;
+
+                // Loader reset, so we can clear out our existing data.
+                mAdapter.clear();
+
+                // Restart loader
+                mLoaderManager.restartLoader(BOOK_LOADER_ID, null, BookEndActivity.this);
+            }
+        });
 
         // Check if network connection exists
         ConnectivityManager connectivityManager = (ConnectivityManager)
@@ -104,7 +137,7 @@ public class BookEndActivity extends AppCompatActivity implements LoaderCallback
             // Initialize the loader. Pass in the int ID constant defined above and pass in null for
             // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
             // because this activity implements the LoaderCallbacks interface).
-            loaderManager.initLoader(BOOK_LOADER_ID, null, this);
+            mLoaderManager.initLoader(BOOK_LOADER_ID, null, BookEndActivity.this);
         } else {
             // Hide loading indicator when data has finished receiving.
             mProgressBar.setVisibility(View.GONE);
@@ -118,7 +151,7 @@ public class BookEndActivity extends AppCompatActivity implements LoaderCallback
      * Called when a previously created loader has finished its load.  Note
      * that normally an application is <em>not</em> allowed to commit fragment
      * transactions while in this call, since it can happen after an
-     * activity's state is saved.  See {@link FragmentManager#beginTransaction()
+     * activity's state is saved.  See
      * FragmentManager.openTransaction()} for further discussion on this.
      * <p>
      * <p>This function is guaranteed to be called prior to the release of
@@ -133,7 +166,7 @@ public class BookEndActivity extends AppCompatActivity implements LoaderCallback
      * them to you through new calls here.  You should not monitor the
      * data yourself.  For example, if the data is a {@link Cursor}
      * and you place it in a {@link CursorAdapter}, use
-     * the {@link CursorAdapter#CursorAdapter(Context, * Cursor, int)} constructor <em>without</em> passing
+     * the  constructor <em>without</em> passing
      * in either {@link CursorAdapter#FLAG_AUTO_REQUERY}
      * or {@link CursorAdapter#FLAG_REGISTER_CONTENT_OBSERVER}
      * (that is, use 0 for the flags argument).  This prevents the CursorAdapter
@@ -189,6 +222,6 @@ public class BookEndActivity extends AppCompatActivity implements LoaderCallback
      */
     @Override
     public Loader<List<Book>> onCreateLoader(int id, Bundle args) {
-        return new BookLoader(this, BOOK_REQUEST_URL);
+        return new BookLoader(this, mBookRequestURL);
     }
 }

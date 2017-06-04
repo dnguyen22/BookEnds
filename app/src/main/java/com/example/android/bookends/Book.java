@@ -1,5 +1,7 @@
 package com.example.android.bookends;
 
+import java.util.ArrayList;
+
 /**
  * Created by Don on 5/29/2017.
  * {@link Book} represents a Book volume data from Google Books.
@@ -12,7 +14,7 @@ public class Book {
     private String mTitle;
 
     /* Author(s) of the book */
-    private String mAuthor;
+    private ArrayList<String> mAuthor;
 
     /* List price of the book in USD */
     private Double mPrice;
@@ -28,7 +30,7 @@ public class Book {
      * @param price is the list price of the book.
      * @param url is the Google Book URL to find more details about the book.
      */
-    public Book(String title, String author, Double price, String url) {
+    public Book(String title, ArrayList<String> author, Double price, String url) {
         this.mTitle = title;
         this.mAuthor = author;
         this.mPrice = price;
@@ -45,7 +47,7 @@ public class Book {
     /**
      * Return the string holding the author(s) of the book.
      */
-    public String getAuthor() {
+    public ArrayList<String> getAuthor() {
         return mAuthor;
     }
 

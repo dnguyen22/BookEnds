@@ -162,18 +162,26 @@ public final class QueryUtils {
                 // Get book volumeInfo JSONObject
                 JSONObject volumeInfo = currentBook.getJSONObject("volumeInfo");
 
+                // Get book author JSONArray
+                JSONArray authorArray = volumeInfo.getJSONArray("authors");
+                ArrayList<String> authors = new ArrayList<>();
+
+                for (int i = 0; i < authorArray.length(); i++) {
+                    authors.add(authorArray.get(i).toString());
+                }
+
                 // Get book saleInfo JSONObject
-                JSONObject saleInfo = currentBook.getJSONObject("saleInfo");
+                //JSONObject saleInfo = currentBook.getJSONObject("saleInfo");
 
                 // Get book listPrice JSONObject
-                JSONObject listPrice = saleInfo.getJSONObject("listPrice");
+                //JSONObject listPrice = saleInfo.getJSONObject("listPrice");
 
                 // Extract "title" for book title, "amount" for USD price, "infoLink" for url
                 // Create book java object from title, author(s), price, and URL.
                 // Add book to list of books
-                String author = "";
+                Double salePriceDummy = 0.0;
                 // ToDo add logic to extract author array
-                books.add(new Book(volumeInfo.getString("title"), author, listPrice.getDouble("amount"), volumeInfo.getString("infoLink")));
+                books.add(new Book(volumeInfo.getString("title"), authors, salePriceDummy /**listPrice.getDouble("amount")*/, volumeInfo.getString("infoLink")));
             }
 
         } catch (JSONException e) {

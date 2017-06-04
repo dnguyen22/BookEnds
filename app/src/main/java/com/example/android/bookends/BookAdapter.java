@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,9 +62,8 @@ public class BookAdapter extends ArrayAdapter<Book>{
         TextView bookAuthorTextView = (TextView) listItemView.findViewById(R.id.book_author_text);
         // Get the book author(s) from t he current Book object and
         // set this text to the bookAuthorTextView
-        // ToDo add helper function to parse array of author(s) and print it to view
-        // String authorFormatted = formatAuthor(currentBook.getAuthor());
-        // bookAuthorTextView.setText(authorFormatted);
+        String authorFormatted = formatAuthor(currentBook.getAuthor());
+        bookAuthorTextView.setText(authorFormatted);
 
         // Find the TextView in the list_item.xml layout with the ID price_text
         TextView priceTextView = (TextView) listItemView.findViewById(R.id.price_text);
@@ -75,5 +75,14 @@ public class BookAdapter extends ArrayAdapter<Book>{
 
         // Return the whole list item layout so that it can be shown in the ListView
         return listItemView;
+    }
+
+    private String formatAuthor(ArrayList<String> authors) {
+        String formattedAuthors = authors.get(0);
+
+        for (int i = 1; i < authors.size(); i++) {
+            formattedAuthors += ", " + authors.get(i);
+        }
+        return formattedAuthors;
     }
 }
